@@ -1,0 +1,30 @@
+---
+- name: Set list of path to look for local Graylog configuration directory
+  set_fact:
+    graylog_search_config_paths: "{{ graylog_search_config_paths }} + [ '{{ graylog_search_config_path }}' ]"
+  with_items: "{{ group_names }}"
+
+- name: Check if Graylog configuration directory exists
+  stat:
+    path: "{{ item }}"
+  register: graylog_config_check
+  become: false
+  delegate_to: 127.0.0.1
+  with_first_found:
+    - files: "{{ graylog_search_config_paths }}"
+      skip: true
+
+- name: Set Graylog configuration directory
+  set_fact:
+    graylog_host_config_path: "{{ graylog_config_check.results[0].stat.path }}"
+  when:
+    - graylog_config_check.results[0] is defined
+    - graylog_config_check.results[0].stat is defined
+    - graylog_config_check.results[0].stat.isdir
+
+- name: Check if Graylog template configuration file is exists
+  stat:
+    path: "{{ graylog_host_config_file_path }}"
+  become: false
+  delegate_to: 127.0.0.1
+  register: graylog_config_check

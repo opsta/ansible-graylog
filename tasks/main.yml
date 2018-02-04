@@ -1,0 +1,14 @@
+---
+- name: Include OS family specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family }}.yml"
+
+- include_tasks: graylog_pre.yml
+- include_tasks: graylog_install.yml
+
+- block: # Config Graylog
+  - include_tasks: graylog_search_config.yml
+  - include_tasks: graylog_post.yml
+  tags:
+    - graylog-config

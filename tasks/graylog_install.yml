@@ -1,0 +1,6 @@
+---
+- name: Install Graylog
+  apt:
+    name: "{{ graylog_apt_package }}"
+    state: present
+    update_cache: yes
