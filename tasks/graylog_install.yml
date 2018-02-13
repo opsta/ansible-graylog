@@ -4,3 +4,9 @@
     name: "{{ graylog_apt_package }}"
     state: present
     update_cache: yes
+
+- name: Ensure service enable
+  service:
+    name: graylog-server
+    enabled: yes
+    state: started
