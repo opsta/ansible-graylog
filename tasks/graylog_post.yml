@@ -1,4 +1,10 @@
 ---
+- name: Set fact variable for list host Elasticsearch
+  set_fact:
+    graylog_elasticsearch_host: "{{ graylog_elasticsearch_host }} + [ 'http://{{ item }}:{{ graylog_elasticsearch_port }}' ]"
+  with_items: "{{ graylog_elasticsearch_hosts }}"
+- debug: var=graylog_elasticsearch_host
+
 - name: Copy Graylog configuration file
   template:
     src: "{{ graylog_host_config_file_path }}"
@@ -7,4 +13,15 @@
     group: root
     mode: 0644
   when: graylog_config_check.stat.exists
+  changed_when: yes
+  notify: Restart Graylog
+
+- name: Copy Graylog configuration file in case of host doesn't have config file
+  template:
+    src: server.conf.j2
+    dest: "{{ graylog_config_file_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: not graylog_config_check.stat.exists
   notify: Restart Graylog
