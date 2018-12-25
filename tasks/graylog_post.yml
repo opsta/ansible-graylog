@@ -1,9 +1,14 @@
 ---
-- name: Set fact variable for list host Elasticsearch
+- name: Set fact variable for list each items
   set_fact:
-    graylog_elasticsearch_host: "{{ graylog_elasticsearch_host }} + [ 'http://{{ item }}:{{ graylog_elasticsearch_port }}' ]"
+    graylog_elasticsearch_facts: "http://{{ item }}:{{ graylog_elasticsearch_port }}"
   with_items: "{{ graylog_elasticsearch_hosts }}"
-- debug: var=graylog_elasticsearch_host
+  register: output_graylog_elasticsearch_facts
+
+- name: Set fact variable for all host Elasticsearch
+  set_fact:
+    graylog_elasticsearch_host: "{{ output_graylog_elasticsearch_facts.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
+  when: output_graylog_elasticsearch_facts.results is defined
 
 - name: Copy Graylog configuration file
   template:
