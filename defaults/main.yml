@@ -5,8 +5,15 @@ graylog_search_config_paths: []
 graylog_host_config_file_path: "{{ graylog_host_config_path | default(inventory_hostname) }}/server.conf.j2"
 graylog_config_file_path: /etc/graylog/server/server.conf
 graylog_config_path: /etc/graylog/server
+graylog_config_template_path: "{{ playbook_dir }}/roles/{{ role_name }}/templates/server.conf.j2"
 
 graylog_password_secret: CHANGEME
 graylog_root_password_sha2: CHANGEME
 
 graylog_all_in_one: false
+
+graylog_elasticsearch_port: 9200
+graylog_elasticsearch_hosts: {}
+  # - YOUR_ELK_HOST_1
+  # - YOUR_ELK_HOST_2
+  # - YOUR_ELK_HOST_3
