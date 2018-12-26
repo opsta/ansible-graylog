@@ -3,12 +3,12 @@
   set_fact:
     graylog_elasticsearch_facts: "http://{{ item }}:{{ graylog_elasticsearch_port }}"
   with_items: "{{ graylog_elasticsearch_hosts }}"
-  register: output_graylog_elasticsearch_facts
+  register: graylog_elasticsearch_facts_output
 
 - name: Set fact variable for all host Elasticsearch
   set_fact:
-    graylog_elasticsearch_host: "{{ output_graylog_elasticsearch_facts.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
-  when: output_graylog_elasticsearch_facts.results is defined
+    graylog_elasticsearch_host: "{{ graylog_elasticsearch_facts_output.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
+  when: graylog_elasticsearch_facts_output.results is defined
 
 - name: Copy Graylog configuration file
   template:
@@ -20,6 +20,18 @@
   when: graylog_config_check.stat.exists
   changed_when: yes
   notify: Restart Graylog
+
+- name: Pre-Check Graylog configuration file in template file
+  stat:
+    path: "{{ graylog_config_template_path }}"
+  register: graylog_config_template_output
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- name: Validate Graylog configuration file exists
+  assert:
+    that: graylog_config_template_output.stat.exists == true
+    msg: "No server.conf.j2 in template directory"
 
 - name: Copy Graylog configuration file in case of host doesn't have config file
   template:
