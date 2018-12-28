@@ -7,7 +7,7 @@
 
 - name: Set fact variable for all host Elasticsearch
   set_fact:
-    graylog_elasticsearch_host: "{{ graylog_elasticsearch_facts_output.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
+    graylog_elasticsearch_host_list: "{{ graylog_elasticsearch_facts_output.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
   when: graylog_elasticsearch_facts_output.results is defined
 
 - name: Copy Graylog configuration file

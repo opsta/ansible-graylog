@@ -169,8 +169,8 @@ rest_listen_uri = http://127.0.0.1:9000/api/
 # requires authentication.
 #
 # Default: http://127.0.0.1:9200
-{% if graylog_elasticsearch_host %}
-elasticsearch_hosts = {{ ",".join(graylog_elasticsearch_host) }}
+{% if graylog_elasticsearch_host_list %}
+elasticsearch_hosts = {{ ",".join(graylog_elasticsearch_host_list) }}
 {% else %}
 elasticsearch_hosts = http://localhost:{{ graylog_elasticsearch_port }}
 {% endif %}
