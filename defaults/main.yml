@@ -13,7 +13,9 @@ graylog_root_password_sha2: CHANGEME
 graylog_all_in_one: false
 
 graylog_elasticsearch_port: 9200
+
+# If set {}, Default to localhost
 graylog_elasticsearch_hosts: {}
-  # - YOUR_ELK_HOST_1
-  # - YOUR_ELK_HOST_2
-  # - YOUR_ELK_HOST_3
+  # - YOUR_ELASTICSEARCH_HOST_1
+  # - YOUR_ELASTICSEARCH_HOST_2
+  # - YOUR_ELASTICSEARCH_HOST_3
