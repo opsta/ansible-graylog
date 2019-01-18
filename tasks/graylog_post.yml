@@ -1,7 +1,7 @@
 ---
 - name: Set fact variable for list each items
   set_fact:
-    graylog_elasticsearch_facts: "http://{{ item }}:{{ graylog_elasticsearch_port }}"
+    graylog_elasticsearch_facts: "{{ item }}"
   with_items: "{{ graylog_elasticsearch_hosts }}"
   register: graylog_elasticsearch_facts_output
 

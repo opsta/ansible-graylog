@@ -12,10 +12,9 @@ graylog_root_password_sha2: CHANGEME
 
 graylog_all_in_one: false
 
-graylog_elasticsearch_port: 9200
-
-# If set {}, Default to localhost
+# If set {}, Default to localhost:9200
 graylog_elasticsearch_hosts: {}
-  # - YOUR_ELASTICSEARCH_HOST_1
-  # - YOUR_ELASTICSEARCH_HOST_2
-  # - YOUR_ELASTICSEARCH_HOST_3
+  # - http://YOUR_ELASTICSEARCH_HOST_2:9200
+  # - http://YOUR_ELASTICSEARCH_HOST_2:9200
+  # - http://YOUR_ELASTICSEARCH_HOST_3:9200
+
