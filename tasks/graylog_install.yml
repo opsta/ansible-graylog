@@ -1,12 +1,19 @@
 ---
-- name: Install Graylog
+- name: Install Graylog (Ubuntu/Debian)
   apt:
-    name: "{{ graylog_apt_package }}"
+    name: "{{ graylog_package_name }}"
     state: present
     update_cache: yes
+  when: ansible_os_family == 'Debian'
 
-- name: Ensure service enable
+- name: Install Graylog (CentOS/RHEL)
+  yum:
+    name: "{{ graylog_package_name }}"
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure service is enabled
   service:
-    name: graylog-server
+    name: "{{ graylog_service_name }}"
     enabled: yes
     state: started

@@ -1,3 +1,0 @@
----
-graylog_apt_package: graylog-server
-graylog_deb_url: https://packages.graylog2.org/repo/packages/graylog-2.5-repository_latest.deb
