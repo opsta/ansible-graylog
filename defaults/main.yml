@@ -14,12 +14,17 @@ graylog_config_file_path: /etc/graylog/server/server.conf
 graylog_config_path: /etc/graylog/server
 graylog_config_template_path: "{{ playbook_dir }}/roles/{{ role_name }}/templates/server.conf.j2"
 
+# Generate with command pwgen -N 1 -s 96
 graylog_password_secret: CHANGEME
+# Use command echo -n yourpassword | shasum -a 256
 graylog_root_password_sha2: CHANGEME
 graylog_min_heap_size: 1g
 graylog_max_heap_size: 1g
 graylog_java_options: "-Xms{{ graylog_min_heap_size }} -Xmx{{ graylog_max_heap_size }} -XX:NewRatio=1 -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow"
 graylog_server_arguments: ""
+
+# In case if you use reverse proxy such as Nginx
+# graylog_http_external_uri: https://graylog.example.com
 
 graylog_all_in_one: false
 
