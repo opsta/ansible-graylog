@@ -131,7 +131,9 @@ plugin_dir = /usr/share/graylog-server/plugin
 # This setting can be overriden on a per-request basis with the "X-Graylog-Server-URL" HTTP request header.
 #
 # Default: $http_publish_uri
-#http_external_uri =
+{% if graylog_http_external_uri %}
+http_external_uri = {{ graylog_http_external_uri }}
+{% endif %}
 
 #### Enable CORS headers for HTTP interface
 #
