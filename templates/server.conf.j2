@@ -131,7 +131,7 @@ plugin_dir = /usr/share/graylog-server/plugin
 # This setting can be overriden on a per-request basis with the "X-Graylog-Server-URL" HTTP request header.
 #
 # Default: $http_publish_uri
-{% if graylog_http_external_uri %}
+{% if graylog_http_external_uri is defined %}
 http_external_uri = {{ graylog_http_external_uri }}
 {% endif %}
 
@@ -185,7 +185,7 @@ http_external_uri = {{ graylog_http_external_uri }}
 # requires authentication.
 #
 # Default: http://127.0.0.1:9200
-{% if graylog_elasticsearch_host_list %}
+{% if graylog_elasticsearch_host_list is defined %}
 elasticsearch_hosts = {{ ",".join(graylog_elasticsearch_host_list) }}
 {% else %}
 elasticsearch_hosts = http://{{ ansible_default_ipv4.address }}:9200
