@@ -1,0 +1,1 @@
+graylog_deb_url: https://packages.graylog2.org/repo/packages/graylog-{{ graylog_version }}-repository_latest.deb

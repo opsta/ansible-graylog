@@ -1,5 +1,5 @@
 ---
-- name: Set fact variable for list each items
+- name: Set fact variable for Elasticsearch list each items
   set_fact:
     graylog_elasticsearch_facts: "{{ item }}"
   with_items: "{{ graylog_elasticsearch_hosts }}"
@@ -9,6 +9,17 @@
   set_fact:
     graylog_elasticsearch_host_list: "{{ graylog_elasticsearch_facts_output.results | map(attribute='ansible_facts.graylog_elasticsearch_facts') | list }}"
   when: graylog_elasticsearch_facts_output.results is defined
+
+- name: Set fact variable for MongoDB list each items
+  set_fact:
+    graylog_mongodb_facts: "{{ item }}"
+  with_items: "{{ graylog_mongodb_hosts }}"
+  register: graylog_mongodb_facts_output
+
+- name: Set fact variable for all host MongoDB
+  set_fact:
+    graylog_mongodb_host_list: "{{ graylog_mongodb_facts_output.results | map(attribute='ansible_facts.graylog_mongodb_facts') | list }}"
+  when: graylog_mongodb_facts_output.results is defined
 
 - name: Copy Graylog configuration file
   template:

@@ -3,3 +3,5 @@
   service:
     name: graylog-server
     state: restarted
+    enabled: yes
+    daemon_reload: yes
