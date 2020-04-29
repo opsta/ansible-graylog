@@ -6,7 +6,7 @@
   - debug: var=graylog_password_secret
 
   - name: Generate admin password of Graylog
-    shell: "echo -n {{ graylog_set_admin_password }} | sha256sum | cut -d \" \" -f1"
+    shell: "echo -n {{ graylog_root_password }} | sha256sum | cut -d \" \" -f1"
     register: graylog_root_password
   when: 
     (ansible_play_hosts |sort |first) == inventory_hostname

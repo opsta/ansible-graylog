@@ -101,7 +101,7 @@ plugin_dir = /usr/share/graylog-server/plugin
 #
 # Default: 127.0.0.1:9000
 http_bind_address = {{ graylog_http_bind }}:9000
-http_bind_address = [2001:db8::1]:9000
+#http_bind_address = [2001:db8::1]:9000
 
 #### HTTP publish URI
 #
@@ -117,7 +117,7 @@ http_bind_address = [2001:db8::1]:9000
 # This configuration setting *must not* contain a wildcard address!
 #
 # Default: http://$http_bind_address/
-{% if graylog_access_bind %}
+{% if graylog_access_bind is defined %}
 http_publish_uri = {{ graylog_access_bind }}
 {% endif %}
 

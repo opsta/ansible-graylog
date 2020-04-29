@@ -6,9 +6,9 @@
     
 - include_tasks: graylog_pre.yml
 - include_tasks: graylog_install.yml
-- include_tasks: graylog_init_cred.yml
 
 - block: # Config Graylog
+  - include_tasks: graylog_init_cred.yml
   - include_tasks: graylog_search_config.yml
   - include_tasks: graylog_post.yml
   tags:
