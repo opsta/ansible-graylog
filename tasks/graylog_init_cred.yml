@@ -9,17 +9,17 @@
     shell: "echo -n {{ graylog_root_password }} | sha256sum | cut -d \" \" -f1"
     register: graylog_secret_root_password
   - debug: var=graylog_secret_root_password
-
-  - name: Store password secret in file
-    copy:
-      content: "{{ graylog_secret_system_password.stdout }}"
-      dest: "{{ graylog_config_path }}/password_secret"
-      mode: 0644
-
-  - name: Store admin's password secret in file
-    copy:
-      content: "{{ graylog_secret_root_password.stdout }}"
-      dest: "{{ graylog_config_path }}/admin_secret"
-      mode: 0644
   when: 
     (ansible_play_hosts |sort |first) == inventory_hostname
+
+- name: Store password secret in file
+  copy:
+    content: "{{ graylog_secret_system_password.stdout }}"
+    dest: "{{ graylog_config_path }}/password_secret"
+    mode: 0644
+
+- name: Store admin's password secret in file
+  copy:
+    content: "{{ graylog_secret_root_password.stdout }}"
+    dest: "{{ graylog_config_path }}/admin_secret"
+    mode: 0644

@@ -36,5 +36,5 @@
 
 - name: Check password secret file
   slurp:
-    src: "{{ graylog_config_path }}/admin_secret"
+    src: "{{ graylog_config_path }}/password_secret"
   register: graylog_secret_system_password
