@@ -28,3 +28,13 @@
   become: false
   delegate_to: 127.0.0.1
   register: graylog_config_check
+
+- name: Check Admin's password secret file
+  slurp:
+    src: "{{ graylog_config_path }}/admin_secret"
+  register: graylog_secret_root_password
+
+- name: Check password secret file
+  slurp:
+    src: "{{ graylog_config_path }}/password_secret"
+  register: graylog_secret_system_password

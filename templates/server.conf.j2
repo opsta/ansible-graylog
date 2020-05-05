@@ -52,7 +52,7 @@ node_id_file = /etc/graylog/server/node-id
 
 # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
 # Generate one by using for example: pwgen -N 1 -s 96
-password_secret = {{ graylog_password_secret.stdout }}
+password_secret = {{ graylog_secret_system_password.stdout if graylog_secret_system_password.stdout is defined else graylog_secret_system_password['content'] | b64decode }}
 
 # The default root user is named 'admin'
 #root_username = admin
@@ -63,7 +63,7 @@ password_secret = {{ graylog_password_secret.stdout }}
 # modify it in this file.
 # Create one by using for example: echo -n yourpassword | shasum -a 256
 # and put the resulting hash value into the following line
-root_password_sha2 = {{ graylog_root_password.stdout }}
+root_password_sha2 = {{ graylog_secret_root_password.stdout if graylog_secret_root_password.stdout is defined else graylog_secret_root_password['content'] | b64decode }}
 
 # The email address of the root user.
 # Default is empty
@@ -101,7 +101,7 @@ plugin_dir = /usr/share/graylog-server/plugin
 #
 # Default: 127.0.0.1:9000
 http_bind_address = {{ graylog_http_bind }}:9000
-http_bind_address = [2001:db8::1]:9000
+#http_bind_address = [2001:db8::1]:9000
 
 #### HTTP publish URI
 #
@@ -117,7 +117,7 @@ http_bind_address = [2001:db8::1]:9000
 # This configuration setting *must not* contain a wildcard address!
 #
 # Default: http://$http_bind_address/
-{% if graylog_access_bind %}
+{% if graylog_access_bind is defined %}
 http_publish_uri = {{ graylog_access_bind }}
 {% endif %}
 

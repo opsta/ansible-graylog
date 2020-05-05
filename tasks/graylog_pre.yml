@@ -8,3 +8,8 @@
   yum:
     name: "{{ graylog_rpm_url }}"
   when: ansible_os_family == 'RedHat'
+
+- name: Install pwgen
+  package:
+     name: "pwgen"
+     state: latest
