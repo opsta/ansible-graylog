@@ -52,7 +52,7 @@ node_id_file = /etc/graylog/server/node-id
 
 # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
 # Generate one by using for example: pwgen -N 1 -s 96
-password_secret = {{ graylog_password_secret }}
+password_secret = {{ graylog_secret_system_password.stdout if graylog_secret_system_password.stdout is defined else graylog_secret_system_password['content'] | b64decode }}
 
 # The default root user is named 'admin'
 #root_username = admin
@@ -63,7 +63,7 @@ password_secret = {{ graylog_password_secret }}
 # modify it in this file.
 # Create one by using for example: echo -n yourpassword | shasum -a 256
 # and put the resulting hash value into the following line
-root_password_sha2 = {{ graylog_root_password_sha2 }}
+root_password_sha2 = {{ graylog_secret_root_password.stdout if graylog_secret_root_password.stdout is defined else graylog_secret_root_password['content'] | b64decode }}
 
 # The email address of the root user.
 # Default is empty
@@ -71,7 +71,7 @@ root_password_sha2 = {{ graylog_root_password_sha2 }}
 
 # The time zone setting of the root user. See http://www.joda.org/joda-time/timezones.html for a list of valid time zones.
 # Default is UTC
-#root_timezone = UTC
+root_timezone = {{ graylog_timezone }}
 
 # Set the bin directory here (relative or absolute)
 # This directory contains binaries that are used by the Graylog server.
@@ -100,7 +100,7 @@ plugin_dir = /usr/share/graylog-server/plugin
 # If the port is omitted, Graylog will use port 9000 by default.
 #
 # Default: 127.0.0.1:9000
-#http_bind_address = 127.0.0.1:9000
+http_bind_address = {{ graylog_http_bind }}:9000
 #http_bind_address = [2001:db8::1]:9000
 
 #### HTTP publish URI
@@ -117,7 +117,9 @@ plugin_dir = /usr/share/graylog-server/plugin
 # This configuration setting *must not* contain a wildcard address!
 #
 # Default: http://$http_bind_address/
-#http_publish_uri = http://192.168.1.1:9000/
+{% if graylog_access_bind is defined %}
+http_publish_uri = {{ graylog_access_bind }}
+{% endif %}
 
 #### External Graylog URI
 #
@@ -185,8 +187,8 @@ http_external_uri = {{ graylog_http_external_uri }}
 # requires authentication.
 #
 # Default: http://127.0.0.1:9200
-{% if graylog_elasticsearch_host_list is defined %}
-elasticsearch_hosts = {{ ",".join(graylog_elasticsearch_host_list) }}
+{% if graylog_elasticsearch_hosts is defined %}
+elasticsearch_hosts = {{ ",".join(graylog_elasticsearch_hosts) }}
 {% else %}
 elasticsearch_hosts = http://{{ ansible_default_ipv4.address }}:9200
 {% endif %}
@@ -527,7 +529,12 @@ lb_recognition_period_seconds = 3
 
 # MongoDB connection string
 # See https://docs.mongodb.com/manual/reference/connection-string/ for details
+
+{% if graylog_mongodb_hosts %}
+mongodb_uri = mongodb://{{ graylog_mongodb_username }}:{{ graylog_mongodb_password }}@{{ ",".join(graylog_mongodb_hosts) }}/{{ graylog_mongodb_dbname }}?replicaSet={{ grafana_mongodb_replica_name }}
+{% else %}
 mongodb_uri = mongodb://localhost/graylog
+{% endif %}
 
 # Authenticate against the MongoDB server
 #mongodb_uri = mongodb://grayloguser:secret@localhost:27017/graylog

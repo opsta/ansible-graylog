@@ -1,19 +1,51 @@
 ---
-- name: Install Graylog (Ubuntu/Debian)
-  apt:
-    name: "{{ graylog_package_name }}"
-    state: present
-    update_cache: yes
+- block:
+  - name: Install Graylog (Ubuntu/Debian)
+    apt:
+      name: "{{ graylog_package_name }}"
+      state: present
+      update_cache: yes
+      
+  - name: Ensure Graylog is enabled (Ubuntu/Debian)
+    systemd:
+      name: "{{ graylog_package_name }}"
+      state: started
+      enabled: yes
   when: ansible_os_family == 'Debian'
 
-- name: Install Graylog (CentOS/RHEL)
-  yum:
-    name: "{{ graylog_package_name }}"
-    state: present
-  when: ansible_os_family == 'RedHat'
+- block:
+  - name: Install Graylog (CentOS/RHEL)
+    yum:
+      name: "{{ graylog_package_name }}"
+      state: present
 
-- name: Ensure service is enabled
-  service:
-    name: "{{ graylog_service_name }}"
-    enabled: yes
-    state: started
+  - name: Install Graylog dependencies (CentOS/RHEL)
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items: "{[ graylog_rpm_dependencies ]}"
+  
+  - name: Enable host firewalld (CentOS/RHEL)
+    systemd:
+      name: firewalld
+      state: started
+      enabled: yes
+
+  - name: Allow Graylog http ports (CentOS/RHEL)
+    firewalld:
+      port: "{{ graylog_rh_http_port }}/tcp"
+      permanent: yes
+      immediate: yes
+      state: enabled
+
+  - name: Allow the web server to access the network (CentOS/RHEL)
+    seboolean:
+      name: "{{ item }}"
+      state: yes
+      persistent: yes
+    with_items:
+      - httpd_can_network_connect
+      - httpd_can_network_connect_db
+
+  when: ansible_os_family == 'RedHat'
+  

@@ -1,0 +1,7 @@
+graylog_rpm_url: https://packages.graylog2.org/repo/packages/graylog-{{ graylog_version }}-repository_latest.rpm
+
+graylog_rpm_dependencies:
+  - epel-release
+  - pwgen
+
+graylog_rh_http_port: 9000
