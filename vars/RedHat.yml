@@ -4,4 +4,4 @@ graylog_rpm_dependencies:
   - epel-release
   - pwgen
 
-graylog_firewall_port: 9000
+graylog_rh_http_port: 9000
