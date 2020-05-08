@@ -1,12 +1,12 @@
 ---
 - block:
-  - name: DEB | Install Graylog (Ubuntu/Debian)
+  - name: Install Graylog (Ubuntu/Debian)
     apt:
       name: "{{ graylog_package_name }}"
       state: present
       update_cache: yes
       
-  - name: DEB | Ensure Graylog is enabled
+  - name: Ensure Graylog is enabled (Ubuntu/Debian)
     systemd:
       name: "{{ graylog_package_name }}"
       state: started
@@ -14,31 +14,31 @@
   when: ansible_os_family == 'Debian'
 
 - block:
-  - name: RH | Install Graylog (CentOS/RHEL)
+  - name: Install Graylog (CentOS/RHEL)
     yum:
       name: "{{ graylog_package_name }}"
       state: present
 
-  - name: RH | Install Graylog dependencies (CentOS/RHEL)
+  - name: Install Graylog dependencies (CentOS/RHEL)
     yum:
       name: "{{ item }}"
       state: present
     with_items: "{[ graylog_rpm_dependencies ]}"
   
-  - name: RH | Enable host firewalld
+  - name: Enable host firewalld (CentOS/RHEL)
     systemd:
       name: firewalld
       state: started
       enabled: yes
 
-  - name: RH | Allow Graylog http ports
+  - name: Allow Graylog http ports (CentOS/RHEL)
     firewalld:
       port: "{{ graylog_rh_http_port }}/tcp"
       permanent: yes
       immediate: yes
       state: enabled
 
-  - name: RH | Allow the web server to access the network
+  - name: Allow the web server to access the network (CentOS/RHEL)
     seboolean:
       name: "{{ item }}"
       state: yes
