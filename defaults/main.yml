@@ -33,7 +33,7 @@ graylog_http_bind: 0.0.0.0
 # graylog_http_external_uri: https://graylog.example.com
 
 # If set {}, Default to {{ ansible_default_ipv4.address }}:9200
-graylog_elasticsearch_hosts: {}
+graylog_elasticsearch_hosts: []
   # - http://YOUR_ELASTICSEARCH_HOST_2:9200
   # - http://YOUR_ELASTICSEARCH_HOST_2:9200
   # - http://YOUR_ELASTICSEARCH_HOST_3:9200
@@ -41,10 +41,10 @@ graylog_elasticsearch_hosts: {}
 # Set MongoDB access and hosts
 # If graylog_mongodb_hosts set {}, Default to localhost:9200
 graylog_mongodb_username: CHANGEME
-graylog_mongodb_passowrd: CHANGEME
+graylog_mongodb_password: CHANGEME
 graylog_mongodb_db_name: CHANGEME
 grafana_mongodb_replica_name: CHANGEME
-graylog_mongodb_hosts: {}
+graylog_mongodb_hosts: []
   # - YOUR_MONGODB_HOST_1:27017
   # - YOUR_MONGODB_HOST_1:27017
   # - YOUR_MONGODB_HOST_1:27017

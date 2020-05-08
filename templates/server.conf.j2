@@ -531,7 +531,7 @@ lb_recognition_period_seconds = 3
 # See https://docs.mongodb.com/manual/reference/connection-string/ for details
 
 {% if graylog_mongodb_hosts %}
-mongodb_uri = mongodb://{{ graylog_mongodb_username }}:{{ graylog_mongodb_passowrd }}@{{ ",".join(graylog_mongodb_host_list) }}/{{ graylog_mongodb_dbname }}?replicaSet={{ grafana_mongodb_replica_name }}
+mongodb_uri = mongodb://{{ graylog_mongodb_username }}:{{ graylog_mongodb_password }}@{{ ",".join(graylog_mongodb_host_list) }}/{{ graylog_mongodb_dbname }}?replicaSet={{ grafana_mongodb_replica_name }}
 {% else %}
 mongodb_uri = mongodb://localhost/graylog
 {% endif %}
