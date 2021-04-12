@@ -48,3 +48,13 @@ graylog_mongodb_hosts: []
   # - YOUR_MONGODB_HOST_1:27017
   # - YOUR_MONGODB_HOST_1:27017
   # - YOUR_MONGODB_HOST_1:27017
+
+# Offline installation
+graylog_offline_install: false
+graylog_baseurl: ''
+graylog_gpg_key_path: "{{ playbook_dir }}/files/groups/graylog/key"
+graylog_gpg_key: GRAYLOG-GPG
+graylog_yum_repo_template: graylog.repo.j2
+
+# enable in case if you change data path & log path
+graylog_change_path: false

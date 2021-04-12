@@ -14,6 +14,10 @@
   when: ansible_os_family == 'Debian'
 
 - block:
+  - name: Import Graylog GPG key
+    command: rpm --import /etc/pki/rpm-gpg/{{ graylog_gpg_key }}
+    when: graylog_offline_install
+
   - name: Install Graylog (CentOS/RHEL)
     yum:
       name: "{{ graylog_package_name }}"
@@ -23,13 +27,17 @@
     yum:
       name: "{{ item }}"
       state: present
-    with_items: "{[ graylog_rpm_dependencies ]}"
+    with_items: 
+      - "{{ graylog_rpm_dependencies }}"
   
-  - name: Enable host firewalld (CentOS/RHEL)
-    systemd:
-      name: firewalld
-      state: started
-      enabled: yes
+  # - name: Enable host firewalld (CentOS/RHEL)
+  #   systemd:
+  #     name: firewalld
+  #     state: started
+  #     enabled: yes
+
+  - name: 'Populate service facts'
+    service_facts:
 
   - name: Allow Graylog http ports (CentOS/RHEL)
     firewalld:
@@ -37,6 +45,7 @@
       permanent: yes
       immediate: yes
       state: enabled
+    when: ansible_facts.services['firewalld.service']['status'] == 'enabled' 
 
   - name: Allow the web server to access the network (CentOS/RHEL)
     seboolean:
@@ -46,6 +55,37 @@
     with_items:
       - httpd_can_network_connect
       - httpd_can_network_connect_db
+    when: ansible_selinux == 'enabled'
 
   when: ansible_os_family == 'RedHat'
-  
+
+- block:
+  - name: "Generate systemd file"
+    template:
+      src: graylog.service.j2
+      dest: /usr/lib/systemd/system/graylog-server.service
+    notify: Restart Graylog
+
+  - name: Ensure service is enabled
+    service:
+      name: "{{ graylog_service_name }}"
+      enabled: yes
+      state: started
+
+  - name: Ensure directory exist
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root 
+      group: root
+    with_items:
+      - "{{ graylog_config_path }}"
+
+  - name: Copy graylog files to new path
+    copy:
+      src: /usr/share/graylog-server/
+      dest: "{{ graylog_config_path }}"
+      owner: root 
+      group: root
+      remote_src: yes
+  when: graylog_change_path

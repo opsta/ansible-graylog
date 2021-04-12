@@ -7,7 +7,25 @@
 - name: Install Graylog repository (CentOS/RHEL)
   yum:
     name: "{{ graylog_rpm_url }}"
-  when: ansible_os_family == 'RedHat'
+  when: 
+    - ansible_os_family == 'RedHat'
+    - not graylog_offline_install
+
+- block: 
+  - name: Add Graylog repository file from template [RHEL/CentOS]
+    template:
+      src: "{{ graylog_yum_repo_template }}"
+      dest: "/etc/yum.repos.d/{{ graylog_yum_repo_template | basename | regex_replace('\\.j2$', '') }}"
+      force: true
+      backup: true
+    when: ansible_pkg_mgr in ['yum', 'dnf']
+
+  - name: Copy Graylog GPG key
+    copy:
+      src: "{{ playbook_dir }}/files/groups/graylog/key/GRAYLOG-GPG"
+      dest: /etc/pki/rpm-gpg/
+    when: ansible_pkg_mgr in ['yum', 'dnf']
+  when: graylog_offline_install
 
 - name: Install pwgen
   package:
