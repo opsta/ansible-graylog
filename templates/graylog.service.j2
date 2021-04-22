@@ -12,7 +12,7 @@ User=graylog
 Group=graylog
 LimitNOFILE=64000
 
-ExecStart={{ graylog_config_path }}/bin/graylog-server
+ExecStart={{ graylog_default_dir }}/bin/graylog-server
 
 # When a JVM receives a SIGTERM signal it exits with 143.
 SuccessExitStatus=143

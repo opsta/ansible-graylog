@@ -29,12 +29,6 @@
       state: present
     with_items: 
       - "{{ graylog_rpm_dependencies }}"
-  
-  # - name: Enable host firewalld (CentOS/RHEL)
-  #   systemd:
-  #     name: firewalld
-  #     state: started
-  #     enabled: yes
 
   - name: 'Populate service facts'
     service_facts:
@@ -76,16 +70,18 @@
     file:
       path: "{{ item }}"
       state: directory
-      owner: root 
-      group: root
+      owner: graylog 
+      group: graylog
     with_items:
       - "{{ graylog_config_path }}"
+      - "{{ graylog_data_path }}"
+      - "{{ graylog_default_dir }}"
 
   - name: Copy graylog files to new path
     copy:
       src: /usr/share/graylog-server/
-      dest: "{{ graylog_config_path }}"
-      owner: root 
-      group: root
+      dest: "{{ graylog_default_dir }}"
+      owner: graylog
+      group: graylog
       remote_src: yes
-  when: graylog_change_path
+  when: graylog_change_install_path
