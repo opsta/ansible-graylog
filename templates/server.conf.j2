@@ -44,7 +44,13 @@
 
 # If you are running more than one instances of Graylog server you have to select one of these
 # instances as master. The master will perform some periodical tasks that non-masters won't perform.
+{% if inventory_hostname in groups['graylog_master']|default([]) -%}
 is_master = true
+{% elif inventory_hostname in groups['graylog_worker']|default([]) -%}
+is_master = false
+{% else -%}
+is_master = true
+{% endif %}
 
 # The auto-generated node ID will be stored in this file and read after restarts. It is a good idea
 # to use an absolute file path here if you are starting Graylog server from init scripts or similar.
@@ -76,15 +82,15 @@ root_timezone = {{ graylog_timezone }}
 # Set the bin directory here (relative or absolute)
 # This directory contains binaries that are used by the Graylog server.
 # Default: bin
-bin_dir = /usr/share/graylog-server/bin
+bin_dir = {{ graylog_default_dir }}/bin
 
 # Set the data directory here (relative or absolute)
 # This directory is used to store Graylog server state.
 # Default: data
-data_dir = /var/lib/graylog-server
+data_dir = {{ graylog_data_path }}
 
 # Set plugin directory here (relative or absolute)
-plugin_dir = /usr/share/graylog-server/plugin
+plugin_dir = {{ graylog_default_dir }}/plugin
 
 ###############
 # HTTP settings
@@ -531,7 +537,7 @@ lb_recognition_period_seconds = 3
 # See https://docs.mongodb.com/manual/reference/connection-string/ for details
 
 {% if graylog_mongodb_hosts %}
-mongodb_uri = mongodb://{{ graylog_mongodb_username }}:{{ graylog_mongodb_password }}@{{ ",".join(graylog_mongodb_hosts) }}/{{ graylog_mongodb_dbname }}?replicaSet={{ grafana_mongodb_replica_name }}
+mongodb_uri = mongodb://{{ graylog_mongodb_username }}:{{ graylog_mongodb_password }}@{{ ",".join(graylog_mongodb_hosts) }}/{{ graylog_mongodb_dbname }}?replicaSet={{ graylog_mongodb_replica_name }}&authSource={{ mongodb_admin_db_name }}
 {% else %}
 mongodb_uri = mongodb://localhost/graylog
 {% endif %}
