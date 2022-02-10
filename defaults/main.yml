@@ -1,9 +1,15 @@
 ---
 graylog_all_in_one: false
 
-graylog_version: 3.1
+graylog_version: 4.2
 graylog_package_name: graylog-server
 graylog_service_name: graylog-server
+graylog_jre_version: 17
+graylog_dependencies:
+  - apt-transport-https
+  - openjdk-{{ graylog_jre_version }}-jre-headless
+  - uuid-runtime
+  - pwgen
 
 graylog_search_config_path: "{{ playbook_dir }}/files/groups/{{ item }}/graylog"
 graylog_search_config_paths: []
@@ -20,7 +26,7 @@ graylog_root_password: CHANGEME
 graylog_timezone: Asia/Bangkok
 graylog_min_heap_size: 1g
 graylog_max_heap_size: 1g
-graylog_java_options: "-Xms{{ graylog_min_heap_size }} -Xmx{{ graylog_max_heap_size }} -XX:NewRatio=1 -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow"
+graylog_java_options: "-Xms{{ graylog_min_heap_size }} -Xmx{{ graylog_max_heap_size }} -XX:NewRatio=1 -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
 graylog_server_arguments: ""
 
 # Set Graylog http access
@@ -59,3 +65,7 @@ graylog_yum_repo_template: graylog.repo.j2
 graylog_change_install_path: false
 graylog_data_path: /var/lib/graylog-server
 graylog_default_dir: /usr/share/graylog-server
+
+# Prometheus
+graylog_prometheus_exporter_enabled: false
+graylog_prometheus_exporter_bind_address: 127.0.0.1:9833
