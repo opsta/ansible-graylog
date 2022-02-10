@@ -7,11 +7,11 @@
 - name: Install Graylog repository (CentOS/RHEL)
   yum:
     name: "{{ graylog_rpm_url }}"
-  when: 
+  when:
     - ansible_os_family == 'RedHat'
     - not graylog_offline_install
 
-- block: 
+- block:
   - name: Add Graylog repository file from template [RHEL/CentOS]
     template:
       src: "{{ graylog_yum_repo_template }}"
@@ -24,10 +24,12 @@
       src: "{{ graylog_gpg_key }}"
       dest: /etc/pki/rpm-gpg/
   when:
-    - ansible_pkg_mgr in ['yum', 'dnf'] 
+    - ansible_pkg_mgr in ['yum', 'dnf']
     - graylog_offline_install
 
-- name: Install pwgen
+- name: Install Graylog dependencies
   package:
-     name: "pwgen"
-     state: latest
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ graylog_dependencies }}"
