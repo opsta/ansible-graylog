@@ -17,7 +17,6 @@ graylog_search_config_paths: []
 graylog_host_config_file_path: "{{ graylog_host_config_path | default(inventory_hostname) }}/server.conf.j2"
 graylog_config_file_path: /etc/graylog/server/server.conf
 graylog_config_path: /etc/graylog/server
-graylog_config_template_path: "{{ playbook_dir }}/roles/{{ role_name }}/templates/server.conf.j2"
 
 # Set Graylog default password
 graylog_root_password: CHANGEME
