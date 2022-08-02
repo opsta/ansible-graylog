@@ -1,7 +1,7 @@
 ---
 - name: Set list of path to look for local Graylog configuration directory
   set_fact:
-    graylog_search_config_paths: "{{ graylog_search_config_paths }} + [ '{{ graylog_search_config_path }}' ]"
+    graylog_search_config_paths: "{{ graylog_search_config_paths + [graylog_search_config_path] }}'"
   with_items: "{{ group_names }}"
 
 - name: Check if Graylog configuration directory exists
